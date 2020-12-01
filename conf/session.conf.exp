@@ -1,0 +1,8 @@
+#session config
+[dev]
+sessionon = true
+sessionname = ChatSessionId
+sessionprovider = redis
+sessionproviderconfig = 127.0.0.1:6379,100,abc12312
+sessioncookielifetime = 804800
+Sessiongcmaxlifetime = 804800

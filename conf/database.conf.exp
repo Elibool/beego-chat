@@ -1,0 +1,7 @@
+#database config
+[dev]
+mysqlUser = chat_user
+mysqlPass = chat_pwd
+mysqlUrls = 127.0.0.1
+mysqlDb   = chat
+mysqlDebug= true
