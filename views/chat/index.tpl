@@ -76,8 +76,9 @@
     WS = window.WS || {};
     MB = window.MB || {};
     let dayTime = 5000;
+    let socket = null;
     $(function () {
-        let socket = new WebSocket('ws://' + window.location.host + '/chat/ws?id=' + WS.params.chatId);
+        socket = new WebSocket('ws://' + window.location.host + '/chat/ws?id=' + WS.params.chatId);
         // 当webSocket连接成功的回调函数
         socket.onopen = function () {
             console.log("webSocket open");
@@ -121,42 +122,16 @@
             socket.send(JSON.stringify(data));
             NProgress.done();
         });
-
+        //回车键发送消息
+        $(document).keyup(function(e){
+            let key = e.which;
+            if(13 == key){
+                WS.sendMsg();
+            }
+        });
         //发送消息
         $('.msg-send').on('click', function () {
-            let data = {
-                accept_id: WS.params.acceptId,
-                type: 2,
-                msg: $('#message').val()
-            };
-            if (WS.params.acceptId < 0) {
-                new PNotify({
-                    title: "注意",
-                    text: "请选择聊天对象",
-                    type: "warning",
-                    styling: 'bootstrap3',
-                    delay: dayTime
-                });
-                return;
-                return;
-            }
-
-            if (data.msg == "" || data.msg == " ") {
-                new PNotify({
-                    title: "注意",
-                    text: "信息不能为空",
-                    type: "warning",
-                    styling: 'bootstrap3',
-                    delay: dayTime
-                });
-                return;
-            }
-            NProgress.start();
-            //公共聊天室
-            data.type = data.accept_id > 0 ? 2 : 3;
-            socket.send(JSON.stringify(data));
-            $('#message').val("");
-            NProgress.done();
+            WS.sendMsg();
         })
     });
 
@@ -260,7 +235,6 @@
             //偏移至最底部
             let height = $('#messages-box').height();
             $('#messages-box-div').scrollTop(height + 100);
-            console.log(height);
         },
         getMessageHtml: function (data) {
             let headHtml = WS.getChatHeadImg(data.member_id);
@@ -289,6 +263,41 @@
                 return '我'
             }
             return $('.li-box-' + chatId).find('.check_member').text()
+        },
+        sendMsg: function() {
+            let data = {
+                accept_id: WS.params.acceptId,
+                type: 2,
+                msg: $('#message').val()
+            };
+            if (WS.params.acceptId < 0) {
+                new PNotify({
+                    title: "注意",
+                    text: "请选择聊天对象",
+                    type: "warning",
+                    styling: 'bootstrap3',
+                    delay: dayTime
+                });
+                return;
+                return;
+            }
+
+            if (data.msg == "" || data.msg == " ") {
+                new PNotify({
+                    title: "注意",
+                    text: "信息不能为空",
+                    type: "warning",
+                    styling: 'bootstrap3',
+                    delay: dayTime
+                });
+                return;
+            }
+            NProgress.start();
+            //公共聊天室
+            data.type = data.accept_id > 0 ? 2 : 3;
+            socket.send(JSON.stringify(data));
+            $('#message').val("");
+            NProgress.done();
         }
     }
 </script>
