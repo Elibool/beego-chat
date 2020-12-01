@@ -6,7 +6,9 @@
 
 聊天信息存储在 mysql 内
 
-session 信息存储在 redis
+session 信息存储在 redis； 
+
+这里 beego 主要使用了其 route 和 http ，session 及 orm 功能
 
 #### 实现的功能：
 1. 多人群聊天室
